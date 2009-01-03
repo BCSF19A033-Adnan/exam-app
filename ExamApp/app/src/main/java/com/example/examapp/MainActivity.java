@@ -3,6 +3,7 @@ package com.example.examapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -18,28 +19,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     TextView questionNo, question;
     Button option1, option2, option3, option4;
-    String [] questionList = {"Which was the king who established rationing system?", "Who robbed the Arabs trade ship?",
-            "How many times did Mahmood Ghaznavi invade on India?", "From where did the Aryans come into South Asia?",
-            "What was called the head of Shaqq?", "What was called the head of the Diwan-e-Arz?",
-            "Whose daughter was Razia Sultan?", "Who were defeated by the Aryans in South Asia?",
-            "Which was the religion, whose founder was Mahaveer?", "From which race Khiljis belonged?"};
 
-    String [][] optionsForQuestions = {{"Qutubuddin Aibak", "Illtutmish", "Allauddin", "Muhammad Tughlaq"}, {"Makranis", "Robbers", "Pirates", "Fisher men"}, {"Fifteen", "Sixteen", "Seventeen", "Eighteen"},
-            {"Central Asia", "Middle East", "Greece", "China"}, {"Shiqq-Dar", "Soob-e-Dar", "Nazim", "Kotwal"}, {"Sadr-us-sadr", "Arz", "Sahib-e-Diwan", "Wazir"},
-            {"Qutubuddin Aibak", "Sultan Ghias ud Din", "Sultan Iltutmish", "Nasir ud Din"}, {"Sumerians", "Turks", "Dravidians", "Chinese"}, {"Hinduism", "Jainism", "Sikhism", "Buddhism"},
-            {"Turk", "Afghan", "Arab", "Mughal"}};
+    String [] questionList = new String[200];
+    String [][] optionsForQuestions = new String[200][4];
+    String [] correctAnsList = new String[200];
 
-    String [] correctAnsList = {"Allauddin", "Pirates", "Seventeen", "Central Asia", "Shiqq-Dar",
-            "Arz", "Sultan Iltutmish", "Dravidians", "Jainism", "Turk"};
+    int totalQuestion;
+
+//    String [] questionList = {"Which was the king who established rationing system?", "Who robbed the Arabs trade ship?",
+//            "How many times did Mahmood Ghaznavi invade on India?", "From where did the Aryans come into South Asia?",
+//            "What was called the head of Shaqq?", "What was called the head of the Diwan-e-Arz?",
+//            "Whose daughter was Razia Sultan?", "Who were defeated by the Aryans in South Asia?",
+//            "Which was the religion, whose founder was Mahaveer?", "From which race Khiljis belonged?"};
+//
+//
+//
+//    String [][] optionsForQuestions = {{"Qutubuddin Aibak", "Illtutmish", "Allauddin", "Muhammad Tughlaq"}, {"Makranis", "Robbers", "Pirates", "Fisher men"}, {"Fifteen", "Sixteen", "Seventeen", "Eighteen"},
+//            {"Central Asia", "Middle East", "Greece", "China"}, {"Shiqq-Dar", "Soob-e-Dar", "Nazim", "Kotwal"}, {"Sadr-us-sadr", "Arz", "Sahib-e-Diwan", "Wazir"},
+//            {"Qutubuddin Aibak", "Sultan Ghias ud Din", "Sultan Iltutmish", "Nasir ud Din"}, {"Sumerians", "Turks", "Dravidians", "Chinese"}, {"Hinduism", "Jainism", "Sikhism", "Buddhism"},
+//            {"Turk", "Afghan", "Arab", "Mughal"}};
+//
+//    String [] correctAnsList = {"Allauddin", "Pirates", "Seventeen", "Central Asia", "Shiqq-Dar",
+//            "Arz", "Sultan Iltutmish", "Dravidians", "Jainism", "Turk"};
+
+
     ArrayList<Integer> wrongAnsList = new ArrayList<>();
     ArrayList<Integer> indicesOfAskedQuestions = new ArrayList<>();
     int noOfWrongQuestions=0, currentQuestionIndex;
     int currentQuestionNo = 1,i=0;
 
+    DBHelper dbHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dbHandler = new DBHelper(getApplicationContext());
 
         questionNo = findViewById(R.id.questionTitle);
         question = findViewById(R.id.questionField);
@@ -53,15 +69,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         option3.setOnClickListener(this);
         option4.setOnClickListener(this);
 
+//        insertDataToDB();
+        loadDataFromDB();
+
         showQuestion();
 
+    }
 
+    private void insertDataToDB() {
+
+        for(int i=0; i<questionList.length;i++)
+        {
+            Question q = new Question();
+            Log.d("b0", String.valueOf(i));
+
+            q.setQuestionvalue(questionList[i]);
+            q.setOption1(optionsForQuestions[i][0]);
+            q.setOption2(optionsForQuestions[i][1]);
+            q.setOption3(optionsForQuestions[i][2]);
+            q.setOption4(optionsForQuestions[i][3]);
+
+            q.setCorrectOption(correctAnsList[i]);
+
+            dbHandler.insert(q);
+        }
+
+        ArrayList<Question> qList = dbHandler.getAllData();
+
+        Log.d("bb", String.valueOf(qList.size()));
+    }
+
+    private void loadDataFromDB() {
+        ArrayList<Question> qList = dbHandler.getAllData();
+        totalQuestion=qList.size();
+        Log.d("b0", String.valueOf(qList.size()));
+
+        for (int i=0; i<200 && i<qList.size();i++)
+        {
+            questionList[i] = qList.get(i).questionvalue;
+            Log.d("b"+i, qList.get(i).questionvalue);
+
+            optionsForQuestions[i][0] = qList.get(i).option1;
+            optionsForQuestions[i][1] = qList.get(i).option2;
+            optionsForQuestions[i][2] = qList.get(i).option3;
+            optionsForQuestions[i][3] = qList.get(i).option4;
+
+            correctAnsList[i] = qList.get(i).correctOption;
+        }
 
     }
 
     protected void showQuestion()
     {
-        if(indicesOfAskedQuestions.size() == questionList.length)
+        if(indicesOfAskedQuestions.size() == totalQuestion)
         {
             showResult();
             return;
@@ -72,10 +132,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Random rnd = new Random();
         ArrayList<String> optionList = new ArrayList<>();
 
-        currentQuestionIndex = rnd.nextInt(questionList.length);
+        currentQuestionIndex = rnd.nextInt(totalQuestion);
         while (indicesOfAskedQuestions.contains(currentQuestionIndex))
         {
-            currentQuestionIndex = rnd.nextInt(questionList.length);
+            currentQuestionIndex = rnd.nextInt(totalQuestion);
         }
         indicesOfAskedQuestions.add(currentQuestionIndex);
 
@@ -110,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         noOfRightQ = findViewById(R.id.countOfRightAns);
 
         noOfWrongQ.setText("Total wrong Answers: "+Integer.toString(noOfWrongQuestions));
-        noOfRightQ.setText("Total Right Answers: "+(questionList.length-noOfWrongQuestions));
+        noOfRightQ.setText("Total Right Answers: "+(totalQuestion-noOfWrongQuestions));
 
         wrongQuestionField = findViewById(R.id.wrongQuestion);
         ansForWrongQuestionField = findViewById(R.id.correctAns);
