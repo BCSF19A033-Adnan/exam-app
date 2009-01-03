@@ -162,9 +162,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.result);
         TextView noOfWrongQ, noOfRightQ, wrongQuestionField, ansForWrongQuestionField;
-        Button nextQuestionBtn = findViewById(R.id.nextBtn);
+        Button nextQuestionBtn = findViewById(R.id.nextBtn), exitBtn;
         nextQuestionBtn.setOnClickListener(this);
 
+        exitBtn = findViewById(R.id.exitBtn);
+        exitBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                finish();
+                System.exit(0);
+            }
+        });
 
         noOfWrongQ = findViewById(R.id.countOfWrongAns);
         noOfRightQ = findViewById(R.id.countOfRightAns);
