@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         if(indicesOfAskedQuestions.size() == questionList.length)
         {
+            setContentView(R.layout.result);
             return;
         }
         questionNo.setText("Question #" + Integer.toString(currentQuestionNo));
