@@ -3,6 +3,7 @@ package com.example.examapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -10,8 +11,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView questionNo, question;
     Button option1, option2, option3, option4;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     String [] correctAnsList = {"Allauddin", "Pirates", "Seventeen", "Central Asia", "Shiqq-Dar",
             "Arz", "Sultan Iltutmish", "Dravidians", "Jainism", "Turk"};
     ArrayList<Integer> wrongAnsList = new ArrayList<>();
+    ArrayList<Integer> indicesOfAskedQuestions = new ArrayList<>();
     int noOfWrongQuestions=0, currentQuestionIndex;
 
     @Override
@@ -43,17 +46,30 @@ public class MainActivity extends AppCompatActivity {
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
 
+        option1.setOnClickListener(this);
+        option2.setOnClickListener(this);
+        option3.setOnClickListener(this);
+        option4.setOnClickListener(this);
 
         showQuestion();
     }
 
     protected void showQuestion()
     {
-        int no;
+        if(indicesOfAskedQuestions.size() == questionList.length)
+        {
+            return;
+        }
+
         Random rnd = new Random();
         ArrayList<String> optionList = new ArrayList<>();
 
         currentQuestionIndex = rnd.nextInt(questionList.length);
+        while (indicesOfAskedQuestions.contains(currentQuestionIndex))
+        {
+            currentQuestionIndex = rnd.nextInt(questionList.length);
+        }
+
         question.setText(questionList[currentQuestionIndex]);
 
         optionList.add(optionsForQuestions[currentQuestionIndex][0]);
@@ -67,5 +83,17 @@ public class MainActivity extends AppCompatActivity {
         option2.setText(optionList.get(1));
         option3.setText(optionList.get(2));
         option4.setText(optionList.get(3));
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        if (option1.getText() != correctAnsList[currentQuestionIndex])
+        {
+            noOfWrongQuestions++;
+            wrongAnsList.add(currentQuestionIndex);
+            // option1.setBackgroundColor(getResources().getColor(R.color.red));
+        }
+        showQuestion();
     }
 }
