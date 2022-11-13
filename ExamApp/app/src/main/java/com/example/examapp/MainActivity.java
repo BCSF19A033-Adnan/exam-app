@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             currentQuestionIndex = rnd.nextInt(questionList.length);
         }
+        indicesOfAskedQuestions.add(currentQuestionIndex);
 
         question.setText(questionList[currentQuestionIndex]);
 
@@ -88,12 +89,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view)
     {
-        if (option1.getText() != correctAnsList[currentQuestionIndex])
+
+        switch (view.getId())
         {
-            noOfWrongQuestions++;
-            wrongAnsList.add(currentQuestionIndex);
-            // option1.setBackgroundColor(getResources().getColor(R.color.red));
+            case R.id.option1:
+                if (option1.getText() != correctAnsList[currentQuestionIndex])
+                {
+                    noOfWrongQuestions++;
+                    wrongAnsList.add(currentQuestionIndex);
+                    // option1.setBackgroundColor(getResources().getColor(R.color.red));
+                }
+                break;
+            case R.id.option2:
+                if (option2.getText() != correctAnsList[currentQuestionIndex])
+                {
+                    noOfWrongQuestions++;
+                    wrongAnsList.add(currentQuestionIndex);
+                }
+                break;
+            case R.id.option3:
+                if (option3.getText() != correctAnsList[currentQuestionIndex])
+                {
+                    noOfWrongQuestions++;
+                    wrongAnsList.add(currentQuestionIndex);
+                }
+                break;
+            case R.id.option4:
+                if (option4.getText() != correctAnsList[currentQuestionIndex])
+                {
+                    noOfWrongQuestions++;
+                    wrongAnsList.add(currentQuestionIndex);
+                }
+                break;
         }
         showQuestion();
     }
-}
