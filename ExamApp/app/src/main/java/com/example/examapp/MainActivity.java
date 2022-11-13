@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 wrongQuestionField.setText(questionList[wrongAnsList.get(i)]);
                 ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(i)]);
                 i++;
-                break;
+                return;
         }
         showQuestion();
     }
