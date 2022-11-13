@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Integer> wrongAnsList = new ArrayList<>();
     ArrayList<Integer> indicesOfAskedQuestions = new ArrayList<>();
     int noOfWrongQuestions=0, currentQuestionIndex;
-    int currentQuestionNo = 1;
+    int currentQuestionNo = 1,i=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,9 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wrongQuestionField = findViewById(R.id.wrongQuestion);
         ansForWrongQuestionField = findViewById(R.id.correctAns);
 
-        wrongQuestionField.setText(questionList[wrongAnsList.get(0)]);
-        ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(0)]);
-        wrongAnsList.remove(0);
+        if(!wrongAnsList.isEmpty())
+        {
+            wrongQuestionField.setText(questionList[wrongAnsList.get(i)]);
+            ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(i)]);
+            i++;
+        }
     }
 
 
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.nextBtn:
-                if(wrongAnsList.isEmpty())
+                if(i>=wrongAnsList.size())
                 {
                     return;
                 }
@@ -164,9 +167,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 wrongQuestionField = findViewById(R.id.wrongQuestion);
                 ansForWrongQuestionField = findViewById(R.id.correctAns);
 
-                wrongQuestionField.setText(questionList[wrongAnsList.get(0)]);
-                ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(0)]);
-                wrongAnsList.remove(0);
+                wrongQuestionField.setText(questionList[wrongAnsList.get(i)]);
+                ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(i)]);
+                i++;
                 break;
         }
         showQuestion();
