@@ -3,6 +3,7 @@ package com.example.examapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,13 +54,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         option4.setOnClickListener(this);
 
         showQuestion();
+
+
+
     }
 
     protected void showQuestion()
     {
         if(indicesOfAskedQuestions.size() == questionList.length)
         {
-            setContentView(R.layout.result);
+            showResult();
             return;
         }
         questionNo.setText("Question #" + Integer.toString(currentQuestionNo));
@@ -90,13 +94,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         option4.setText(optionList.get(3));
     }
 
-//    public void resetOptionColors()
-//    {
-//        option1.setBackgroundColor(getResources().getColor(R.color.blue));
-//        option2.setBackgroundColor(getResources().getColor(R.color.blue));
-//        option3.setBackgroundColor(getResources().getColor(R.color.blue));
-//        option4.setBackgroundColor(getResources().getColor(R.color.blue));
-//    }
+    protected void showResult()
+    {
+        //LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+
+        //View view = inflater.inflate(R.layout.result, null);
+
+        setContentView(R.layout.result);
+        TextView noOfWrongQ, noOfRightQ, wrongQuestionField, ansForWrongQuestionField;
+        Button nextQuestionBtn = findViewById(R.id.nextBtn);
+        nextQuestionBtn.setOnClickListener(this);
+
+
+        noOfWrongQ = findViewById(R.id.countOfWrongAns);
+        noOfRightQ = findViewById(R.id.countOfRightAns);
+
+        noOfWrongQ.setText("Total wrong Answers: "+Integer.toString(noOfWrongQuestions));
+        noOfRightQ.setText("Total Right Answers: "+(questionList.length-noOfWrongQuestions));
+
+        wrongQuestionField = findViewById(R.id.wrongQuestion);
+        ansForWrongQuestionField = findViewById(R.id.correctAns);
+
+        wrongQuestionField.setText(questionList[wrongAnsList.get(0)]);
+        ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(0)]);
+        wrongAnsList.remove(0);
+    }
+
 
     @Override
     public void onClick(View view)
@@ -130,6 +153,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     noOfWrongQuestions++;
                     wrongAnsList.add(currentQuestionIndex);
                 }
+                break;
+            case R.id.nextBtn:
+                if(wrongAnsList.isEmpty())
+                {
+                    return;
+                }
+                TextView noOfWrongQ, noOfRightQ, wrongQuestionField, ansForWrongQuestionField;
+
+                wrongQuestionField = findViewById(R.id.wrongQuestion);
+                ansForWrongQuestionField = findViewById(R.id.correctAns);
+
+                wrongQuestionField.setText(questionList[wrongAnsList.get(0)]);
+                ansForWrongQuestionField.setText(correctAnsList[wrongAnsList.get(0)]);
+                wrongAnsList.remove(0);
+                break;
         }
         showQuestion();
     }
