@@ -7,6 +7,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     String [] correctAnsList = {"Allauddin", "Pirates", "Seventeen", "Central Asia", "Shiqq-Dar",
             "Arz", "Sultan Iltutmish", "Dravidians", "Jainism", "Turk"};
     ArrayList<Integer> wrongAnsList = new ArrayList<>();
-    int noOfWrongQuestions;
+    int noOfWrongQuestions=0, currentQuestionIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,5 +43,29 @@ public class MainActivity extends AppCompatActivity {
         option3 = findViewById(R.id.option3);
         option4 = findViewById(R.id.option4);
 
+
+        showQuestion();
+    }
+
+    protected void showQuestion()
+    {
+        int no;
+        Random rnd = new Random();
+        ArrayList<String> optionList = new ArrayList<>();
+
+        currentQuestionIndex = rnd.nextInt(questionList.length);
+        question.setText(questionList[currentQuestionIndex]);
+
+        optionList.add(optionsForQuestions[currentQuestionIndex][0]);
+        optionList.add(optionsForQuestions[currentQuestionIndex][1]);
+        optionList.add(optionsForQuestions[currentQuestionIndex][2]);
+        optionList.add(optionsForQuestions[currentQuestionIndex][3]);
+
+        Collections.shuffle(optionList);
+
+        option1.setText(optionList.get(0));
+        option2.setText(optionList.get(1));
+        option3.setText(optionList.get(2));
+        option4.setText(optionList.get(3));
     }
 }
