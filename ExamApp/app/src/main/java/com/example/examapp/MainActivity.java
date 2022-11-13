@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ArrayList<Integer> wrongAnsList = new ArrayList<>();
     ArrayList<Integer> indicesOfAskedQuestions = new ArrayList<>();
     int noOfWrongQuestions=0, currentQuestionIndex;
+    int currentQuestionNo = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         {
             return;
         }
+        questionNo.setText("Question #" + Integer.toString(currentQuestionNo));
+        currentQuestionNo++;
 
         Random rnd = new Random();
         ArrayList<String> optionList = new ArrayList<>();
@@ -86,10 +89,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         option4.setText(optionList.get(3));
     }
 
+//    public void resetOptionColors()
+//    {
+//        option1.setBackgroundColor(getResources().getColor(R.color.blue));
+//        option2.setBackgroundColor(getResources().getColor(R.color.blue));
+//        option3.setBackgroundColor(getResources().getColor(R.color.blue));
+//        option4.setBackgroundColor(getResources().getColor(R.color.blue));
+//    }
+
     @Override
     public void onClick(View view)
     {
-
         switch (view.getId())
         {
             case R.id.option1:
@@ -97,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     noOfWrongQuestions++;
                     wrongAnsList.add(currentQuestionIndex);
-                    // option1.setBackgroundColor(getResources().getColor(R.color.red));
                 }
                 break;
             case R.id.option2:
@@ -120,7 +129,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     noOfWrongQuestions++;
                     wrongAnsList.add(currentQuestionIndex);
                 }
-                break;
         }
         showQuestion();
     }
+
+
+}
